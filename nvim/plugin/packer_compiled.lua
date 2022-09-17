@@ -109,11 +109,6 @@ _G.packer_plugins = {
     path = "/home/jer/.local/share/nvim/site/pack/packer/start/color-wheel.vim",
     url = "https://github.com/sh4hids/color-wheel.vim"
   },
-  github = {
-    loaded = true,
-    path = "/home/jer/.local/share/nvim/site/pack/packer/start/github",
-    url = "https://github.com/projekt0n/github-nvim-theme"
-  },
   ["gitsigns.nvim"] = {
     loaded = true,
     path = "/home/jer/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
@@ -159,11 +154,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/jer/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
-  },
-  ["nvim-mariana"] = {
-    loaded = true,
-    path = "/home/jer/.local/share/nvim/site/pack/packer/start/nvim-mariana",
-    url = "https://github.com/kaiuri/nvim-mariana"
   },
   ["nvim-transparent"] = {
     loaded = true,

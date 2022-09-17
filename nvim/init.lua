@@ -277,7 +277,7 @@ require('Comment').setup(
 	})
 
 -- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'fzf-native')
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
@@ -290,7 +290,6 @@ local on_attach = function(_, bufnr)
 
 		vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
 	end
-
 	-- Keymaps best applied on attach to a buffer...
 	-- WARN: A lot, if not all of my hotkeys will only make sense to users of colemak layouts.
 	nmap("<leader>ct", ":Telescope colorscheme<CR>")
@@ -585,7 +584,7 @@ vim.wo.signcolumn = 'yes'
 vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 
 -- Themes, I have many and change often depending on the time of day etc.
-vim.cmd [[colorscheme nightfly]]
+vim.cmd [[colorscheme terafox]]
 --vim.cmd [[colorscheme ayu]]
 --vim.cmd [[colorscheme horizon]]
 --vim.g.ayucolor = "mirage"
