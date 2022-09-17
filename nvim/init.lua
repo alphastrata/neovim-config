@@ -591,3 +591,14 @@ vim.cmd [[colorscheme terafox]]
 
 -- Autofmt on save
 vim.cmd [[au BufWritePre * lua vim.lsp.buf.formatting()]]
+
+-- These are specific to Neovide
+vim.cmd [[
+if exists("g:neovide")
+	let g:neovide_refresh_rate=60
+	let g:neovide_transparency=0.8
+	let g:neovide_cursor_antialiasing=v:true
+	let g:neovide_scroll_animation_length = 0.4
+	let g:neovide_cursor_animation_length=0.05
+endif
+]]
