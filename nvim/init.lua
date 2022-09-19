@@ -279,7 +279,7 @@ require('Comment').setup(
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf-native')
 
--- LSP settings.
+-- LSP settings (and most of my LSP related mappings)
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
 	-- NOTE: lifted from TJ's kickstarter.
@@ -292,11 +292,6 @@ local on_attach = function(_, bufnr)
 	end
 	-- Keymaps best applied on attach to a buffer...
 	-- WARN: A lot, if not all of my hotkeys will only make sense to users of colemak layouts.
-	nmap("<leader>ct", ":Telescope colorscheme<CR>")
-	nmap("<leader>f", ":Telescope find_files<CR>")
-	nmap("<leader>fa", ":Telescope live_grep<CR>")
-	nmap("<leader>spell", ":Telescope spell_suggest<CR>")
-	nmap("<leader>ttt", ":Telescope<CR>")
 	nmap('<leader>h', vim.diagnostic.goto_prev) -- space+h to jump to previous error/warning as thrown by lsp
 	nmap('<leader>i', vim.diagnostic.goto_next) -- space+i for the opposite
 	nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -438,7 +433,7 @@ cmp.setup {
 -- require("null-ls").setup({
 --   sources = {
 --     require("null-ls").builtins.formatting.stylua,
---     require("null-ls").builtins.formatting.black,
+--     require("null-ls").builtins.formateltting.black,
 --     require("null-ls").builtins.formatting.rustfmt,
 --     require("null-ls").builtins.formatting.gofmt,
 --     require("null-ls").builtins.formatting.uncrustify,
@@ -563,6 +558,12 @@ keymap("v", ">", ">gv", opts)
 -- Move text up and down, just be in visual mode and use SHIFT N or E
 keymap("x", "N", ":move '>+1<CR>gv-gv", opts)
 keymap("x", "E", ":move '<-2<CR>gv-gv", opts)
+
+keymap("n", "<leader>ct", ":Telescope colorscheme<CR>", opts)
+keymap("n", "<leader>spell", ":Telescope spell_suggest<CR>", opts)
+keymap("n", "<leader>f", ":Telescope find_files<CR>", opts)
+keymap("n", "<leader>fa", ":Telescope live_grep<CR>", opts)
+keymap("n", "<leader>T", ":Telescope<CR>", opts)
 
 -- INFO: what was settings.vim
 -- See `:help vim.o`
