@@ -343,7 +343,13 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 
 -- Enable the following language servers
 local servers = { 'clangd', 'rust_analyzer', 'sumneko_lua', 'gopls', 'jsonls', 'cmake', 'dockerls',
-	'pyright', 'grammarly' } --TODO: add json, elixr, haskell etc next time you use them...
+	'pyright', 'grammarly' }
+
+require 'lspconfig'.wgsl_analyzer.setup {
+	cmd = { "wgsl_analyzer" },
+	filetypes = { "wgsl" },
+	settings = {},
+}
 
 -- Ensure the servers above are installed
 require('nvim-lsp-installer').setup {
@@ -360,10 +366,13 @@ end
 -- NOTE: Also lifted from TJ's kickstarter
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')
+
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
-require('lspconfig').sumneko_lua.setup {
+local lspconfig = require("lspconfig")
+
+lspconfig.sumneko_lua.setup {
 	on_attach = on_attach,
 	capabilities = capabilities,
 	settings = {
