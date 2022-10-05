@@ -1,4 +1,4 @@
--- Install packer
+-- Install packer -> => !=  -> => ~= !=
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 local is_bootstrap = false
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
@@ -14,7 +14,6 @@ require('packer').startup(function(use)
 
 	-- aesthetics:
 	-- themes:
-	use "ayu-theme/ayu-vim"
 	use 'EdenEast/nightfox.nvim'
 	use 'bluz71/vim-nightfly-guicolors'
 	use 'folke/tokyonight.nvim'
@@ -36,8 +35,8 @@ require('packer').startup(function(use)
 	use 'nvim-lua/plenary.nvim' -- all the lua functions you don't wanna write twice
 	use 'nvim-lualine/lualine.nvim' -- statusline
 	use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code
+	--use 'nvim-treesitter/nvim-treesitter-context' -- Get the name of the block you're in redardless of how offscreen that line may be...
 	use 'nvim-treesitter/nvim-treesitter-textobjects' --  Additional textobjects for treesitter
-	use 'p00f/nvim-ts-rainbow' -- Rainbow brackets, coz I use languages that use brackets.
 	use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
 	use 'williamboman/nvim-lsp-installer' -- Automatically install language servers to stdpath
 	use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } } -- Snippet Engine and Snippet Expansion
@@ -48,7 +47,16 @@ require('packer').startup(function(use)
 	use { 'tzachar/cmp-tabnine', run = './install.sh', requires = 'hrsh7th/nvim-cmp' } -- Tabnine is like github autopilot (useful for working in unfamiliar languages)
 	use { "windwp/nvim-autopairs", config = function() require("nvim-autopairs").setup {} end -- I don't like the autobracketing in neovim's default
 	}
-
+	-- NEOTREE
+	use {
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v2.x",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"kyazdani42/nvim-web-devicons",
+			"MunifTanjim/nui.nvim",
+		}
+	}
 	-- Like everyone alive, I tried it -- decided it ain't worth it.
 	-- Copilot NOTE: https://github.com/github/copilot.vim
 	-- use("github/copilot.vim")
@@ -155,13 +163,14 @@ require('todo-comments').setup(
 			FIX = {
 				icon = " ", -- icon used for the sign, and in search results
 				color = "error", -- can be a hex color, or a named color (see below)
-				alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+				alt = { "FIXME", "BUG", "FIXIT", "ISSUE", "PROBLEM" }, -- a set of other keywords that all map to this FIX keywords
 				-- signs = false, -- configure signs for some keywords individually
 			},
 			TODO = { icon = " ", color = "info" },
 			HACK = { icon = " ", color = "warning" },
+			QUESTION = { icon = "", color = "warning" },
 			WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-			PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+			PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMISE" } },
 			NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
 		},
 		merge_keywords = true, -- when true, custom keywords will be merged with the defaults
@@ -175,7 +184,7 @@ require('todo-comments').setup(
 			after = "fg", -- "fg" or "bg" or empty
 			pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlightng (vim regex)
 			comments_only = true, -- uses treesitter to match keywords in comments only
-			max_line_len = 400, -- ignore lines longer than this
+			max_line_len = 1200, -- ignore lines longer than this
 			exclude = {}, -- list of file types to exclude highlighting
 		},
 		-- list of named colors where we try to extract the guifg from the
@@ -274,7 +283,8 @@ require('Comment').setup(
 		---Post-hook, called after commenting is done
 		---@type fun(ctx: CommentCtx)
 		post_hook = nil,
-	})
+	}
+)
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf-native')
@@ -282,7 +292,6 @@ pcall(require('telescope').load_extension, 'fzf-native')
 -- LSP settings (and most of my LSP related mappings)
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
-	-- NOTE: lifted from TJ's kickstarter.
 	local nmap = function(keys, func, desc)
 		if desc then
 			desc = 'LSP: ' .. desc
@@ -307,8 +316,8 @@ end
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
-	ensure_installed = { 'c', 'rust', 'python', 'go', 'lua' }, -- add your languages here.
-	highlight = { enable = true, color = 'cyan', additional_vim_regex_highlighting = true },
+	ensure_installed = { 'c', 'rust', 'python', 'go', 'lua', 'markdown', 'haskell', 'json', 'latex', 'toml' }, -- add your languages here.
+	highlight = { enable = true, additional_vim_regex_highlighting = true },
 	indent = { enable = true },
 	auto_install = true,
 	sync_install = false,
@@ -337,25 +346,18 @@ require('nvim-treesitter.configs').setup {
 
 	}
 }
-
 -- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- Enable the following language servers
-local servers = { 'clangd', 'rust_analyzer', 'sumneko_lua', 'gopls', 'jsonls', 'cmake', 'dockerls',
-	'pyright', 'grammarly' }
-
-require 'lspconfig'.wgsl_analyzer.setup {
-	cmd = { "wgsl_analyzer" },
-	filetypes = { "wgsl" },
-	settings = {},
-}
+local servers = { 'rust_analyzer', 'sumneko_lua', 'gopls', 'jsonls', 'grammarly' }
 
 -- Ensure the servers above are installed
 require('nvim-lsp-installer').setup {
 	ensure_installed = servers,
 }
 
+-- Attach em to buffers...
 for _, lsp in ipairs(servers) do
 	require('lspconfig')[lsp].setup {
 		on_attach = on_attach,
@@ -363,15 +365,12 @@ for _, lsp in ipairs(servers) do
 	}
 end
 
--- NOTE: Also lifted from TJ's kickstarter
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')
-
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
 local lspconfig = require("lspconfig")
-
 lspconfig.sumneko_lua.setup {
 	on_attach = on_attach,
 	capabilities = capabilities,
@@ -402,7 +401,7 @@ cmp.setup {
 	mapping = cmp.mapping.preset.insert {
 		['<C-d>'] = cmp.mapping.scroll_docs(-4),
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
-		['<C-Space>'] = cmp.mapping.complete(),
+		--['<C-Space>'] = cmp.mapping.complete(),
 		['<CR>'] = cmp.mapping.confirm {
 			behavior = cmp.ConfirmBehavior.Replace,
 			select = true,
@@ -432,42 +431,7 @@ cmp.setup {
 		{ name = 'luasnip' },
 	},
 }
--- LSP_LINES, as mentioned above can put lsp_diagnostics etc INLINE with your code..
--- require("lsp_lines").setup(
---   vim.diagnostic.config({
---     virtual_text = false,
---   })
--- )
--- FORMATTING --
--- require("null-ls").setup({
---   sources = {
---     require("null-ls").builtins.formatting.stylua,
---     require("null-ls").builtins.formateltting.black,
---     require("null-ls").builtins.formatting.rustfmt,
---     require("null-ls").builtins.formatting.gofmt,
---     require("null-ls").builtins.formatting.uncrustify,
---     require("null-ls").builtins.completion.spell,
---     require("null-ls").builtins.diagnostics.cppcheck,
---   },
--- })
--- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
--- require("null-ls").setup({
---   -- you can reuse a shared lspconfig on_attach callback here
---   on_attach = function(client, bufnr)
---     if client.supports_method("textDocument/formatting") then
---       vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
---       vim.api.nvim_create_autocmd("BufWritePre", {
---         group = augroup,
---         buffer = bufnr,
---         callback = function()
---           -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
---           vim.lsp.buf.formatting_sync()
---         end,
---       })
---     end
---   end,
--- })
---
+
 -- Gitsigns, just shows you + for additions and - for removals etc kinda like a quick n dirty git-diff
 require('gitsigns').setup {
 	signs = {
@@ -581,7 +545,7 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.hlsearch = false
 vim.o.ignorecase = true
 vim.o.mouse = 'a'
-vim.o.scrolloff = 35 --min lines at bottom of screen from cursor
+vim.o.scrolloff = 10 --min lines at bottom of screen from cursor
 vim.o.showtabline = 0 -- never use tabs, fzf or telescope will take you to open tabs if they're there.
 vim.o.smartcase = true
 vim.o.termguicolors = true
@@ -595,12 +559,13 @@ vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 
 -- Themes, I have many and change often depending on the time of day etc.
 vim.cmd [[colorscheme terafox]]
---vim.cmd [[colorscheme ayu]]
---vim.cmd [[colorscheme horizon]]
---vim.g.ayucolor = "mirage"
+--vim.cmd [[colorscheme nightfly]]
 
 -- Autofmt on save
 vim.cmd [[au BufWritePre * lua vim.lsp.buf.formatting()]]
+
+-- NEOTREE
+vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 -- These are specific to Neovide
 vim.cmd [[
