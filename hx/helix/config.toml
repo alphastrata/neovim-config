@@ -1,0 +1,73 @@
+theme = "base16_transparent"
+
+[editor]
+line-number = "relative"
+scrolloff = 15
+mouse = true
+auto-completion = true
+auto-format = true
+completion-trigger-len = 3
+auto-info = true
+true-color = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "bar"
+select = "block"
+
+[editor.file-picker]
+hidden = false
+
+[keys.normal]
+# swap out `i`'s insert mode by default, to avoid conflicts with colemak
+t ="no_op" 
+h ="no_op" 
+n ="no_op" 
+e ="no_op" 
+i ="no_op" 
+I= "no_op"
+
+t = "insert_mode"
+K = "hover"
+T = "goto_line_start"
+
+f = "find_till_char"
+F = "till_prev_char"
+
+
+
+# COLEMAK
+h = "move_char_left"
+e = "move_line_up"
+n = "move_line_down"
+i = "move_char_right"
+g = { a = "code_action" } # Maps `ga` to show possible code actions
+
+[keys.insert]
+"esc" = "normal_mode"
+
+
+[keys.normal.space]
+q = ":bc!"
+w = ":w!"
+c = { l = "toggle_comments"}
+"tab" = ":buffer-next" 
+"S-tab" = ":buffer-previous" 
+h = "goto_next_diag"
+i = "goto_prev_diag"
+
+
+w = {h = "jump_view_left"}
+w = {i = "jump_view_right"}
+w = {n = "jump_view_down"}
+w = {e = "jump_view_up"}
+s = {a = "surround_add"}
+s = {r = "surround_replace"}
+r = {n = "rename_symbol"}
+# THINGS TRIED THAT DON'T WORK....
+## space opens a special menu in Helix, from which you pick things -- overrides are not supported 
+#"space" = { w = ":write!" }
+#"space" = { q = ":buffer-close!" }
+#"space" = { ";" = ":config-reload" }
+# "space-h" = "goto_next_diag"
+# "space-i" = "goto_prev_diag"
