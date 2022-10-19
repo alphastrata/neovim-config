@@ -14,7 +14,6 @@ require('packer').startup(function(use)
 
 	-- aesthetics:
 	-- themes:
-	use 'arzg/vim-colors-xcode'
 	use 'EdenEast/nightfox.nvim'
 	use 'bluz71/vim-nightfly-guicolors'
 	use 'folke/tokyonight.nvim'
@@ -31,8 +30,7 @@ require('packer').startup(function(use)
 
 	-- tools:
 	use 'lewis6991/spellsitter.nvim' -- spell better
-	use 'neovim/nvim-lspconfig'
-	use 'simrat39/rust-tools.nvim'
+	use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
 	use 'numToStr/Comment.nvim' -- "cl" to comment/uncomment visual regions/lines
 	use 'nvim-lua/plenary.nvim' -- all the lua functions you don't wanna write twice
 	use 'nvim-lualine/lualine.nvim' -- statusline
@@ -122,19 +120,6 @@ require("indent_blankline").setup {
 	show_current_context = true,
 	show_current_context_start = true,
 }
-
--- RUSTTOOLS:
-local rt = require("rust-tools")
-rt.setup({
-	server = {
-		on_attach = function(_, bufnr)
-			-- Hover actions
-			vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-			-- Code action groups
-			vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-		end,
-	},
-})
 
 -- lualine
 -- NOTE: you'll need ceratin nerdfonts installed for this to *not* look like shit
@@ -573,7 +558,8 @@ vim.wo.signcolumn = 'yes'
 vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 
 -- Themes, I have many and change often depending on the time of day etc.
-vim.cmd [[colorscheme xcodedark]]
+vim.cmd [[colorscheme terafox]]
+--vim.cmd [[colorscheme nightfly]]
 
 -- Autofmt on save
 vim.cmd [[au BufWritePre * lua vim.lsp.buf.formatting()]]
