@@ -14,6 +14,7 @@ require('packer').startup(function(use)
 
 	-- aesthetics:
 	-- themes:
+	use 'arzg/vim-colors-xcode'
 	use 'EdenEast/nightfox.nvim'
 	use 'bluz71/vim-nightfly-guicolors'
 	use 'folke/tokyonight.nvim'
@@ -21,16 +22,10 @@ require('packer').startup(function(use)
 	use 'sh4hids/color-wheel.vim' -- Plugin to allow you to clone vscode themes into something neovim can handle
 	use 'xiyaowong/nvim-transparent' -- I have a virtual background, that refreshes every 10 minutes and like to well, see that.
 
-	-- use({ -- LSP_LINES is a plugin that pipes lsp-diagnostics into the neovim virtual text thingy -- I cannot make up my mind whether I hate, or love it...
-	--   "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-	--   config = function()
-	--     require("lsp_lines").setup()
-	--   end,
-	-- })
-
 	-- tools:
 	use 'lewis6991/spellsitter.nvim' -- spell better
-	use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
+	use 'neovim/nvim-lspconfig'
+	use 'simrat39/rust-tools.nvim'
 	use 'numToStr/Comment.nvim' -- "cl" to comment/uncomment visual regions/lines
 	use 'nvim-lua/plenary.nvim' -- all the lua functions you don't wanna write twice
 	use 'nvim-lualine/lualine.nvim' -- statusline
@@ -42,8 +37,14 @@ require('packer').startup(function(use)
 	use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } } -- Snippet Engine and Snippet Expansion
 	use { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' } -- Enables these TODO: comments to get that sweet, sweet highlighting.
 	use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } } -- Autocompletion
-	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable "make" == 1 } -- Telescope is pretty famous by now, so no intros.
+
+	use 'ggandor/leap.nvim'
+	use { 'nvim-telescope/telescope-fzf-native.nvim',
+		run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+
+	--use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable "make" == 1 } -- Telescope is pretty famous by now, so no intros.
 	use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Fuzzy Finder (files, lsp, etc)
+	use { "nvim-telescope/telescope-file-browser.nvim" }
 	use { 'tzachar/cmp-tabnine', run = './install.sh', requires = 'hrsh7th/nvim-cmp' } -- Tabnine is like github autopilot (useful for working in unfamiliar languages)
 	use { "windwp/nvim-autopairs", config = function() require("nvim-autopairs").setup {} end -- I don't like the autobracketing in neovim's default
 	}
@@ -74,6 +75,8 @@ end)
 
 -- INFO: impatient allegedly improves startup time of lua-modules...
 require('impatient')
+
+require('leap').add_default_mappings()
 
 require("transparent").setup({
 	enable = true, -- boolean: enable transparent
@@ -120,6 +123,19 @@ require("indent_blankline").setup {
 	show_current_context = true,
 	show_current_context_start = true,
 }
+
+-- RUSTTOOLS:
+local rt = require("rust-tools")
+rt.setup({
+	server = {
+		on_attach = function(_, bufnr)
+			-- Hover actions
+			vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+			-- Code action groups
+			vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+		end,
+	},
+})
 
 -- lualine
 -- NOTE: you'll need ceratin nerdfonts installed for this to *not* look like shit
@@ -184,7 +200,7 @@ require('todo-comments').setup(
 			after = "fg", -- "fg" or "bg" or empty
 			pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlightng (vim regex)
 			comments_only = true, -- uses treesitter to match keywords in comments only
-			max_line_len = 1200, -- ignore lines longer than this
+			max_line_len = 1900, -- ignore lines longer than this
 			exclude = {}, -- list of file types to exclude highlighting
 		},
 		-- list of named colors where we try to extract the guifg from the
@@ -286,8 +302,8 @@ require('Comment').setup(
 	}
 )
 
--- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf-native')
+-- Enable telescope fzf(I'm using the C implementation), if installed
+require('telescope').load_extension('fzf')
 
 -- LSP settings (and most of my LSP related mappings)
 --  This function gets run when an LSP connects to a particular buffer.
@@ -347,7 +363,7 @@ require('nvim-treesitter.configs').setup {
 	}
 }
 -- nvim-cmp supports additional completion capabilities
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- Enable the following language servers
 local servers = { 'rust_analyzer', 'sumneko_lua', 'gopls', 'jsonls', 'grammarly' }
@@ -527,17 +543,19 @@ keymap("n", "<C-i>", ":vertical resize +2<CR>", opts)
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
 
--- Visual Block --
--- Move text up and down, just be in visual mode and use SHIFT N or E
-keymap("x", "N", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "E", ":move '<-2<CR>gv-gv", opts)
-
+-- Useful telescopes...
 keymap("n", "<leader>ct", ":Telescope colorscheme<CR>", opts)
-keymap("n", "<leader>spell", ":Telescope spell_suggest<CR>", opts)
-keymap("n", "<leader>f", ":Telescope find_files<CR>", opts)
+keymap("n", "<leader>sp", ":Telescope spell_suggest<CR>", opts)
+keymap("n", "<leader>f", ":Telescope find_files hidden=true<CR>", opts)
+keymap("n", "<leader>fd", ":Telescope fd<CR>", opts)
 keymap("n", "<leader>fa", ":Telescope live_grep<CR>", opts)
 keymap("n", "<leader>T", ":Telescope<CR>", opts)
+keymap("n", "<leader>fb", ":Telescope file_browser<CR>", opts)
 
+--NeoTree
+keymap("n", "<leader>neo", ":Neotree<CR>", opts)
+
+--
 -- INFO: what was settings.vim
 -- See `:help vim.o`
 vim.o.breakindent = true
@@ -545,7 +563,7 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.hlsearch = false
 vim.o.ignorecase = true
 vim.o.mouse = 'a'
-vim.o.scrolloff = 10 --min lines at bottom of screen from cursor
+vim.o.scrolloff = 15 --min lines at bottom of screen from cursor
 vim.o.showtabline = 0 -- never use tabs, fzf or telescope will take you to open tabs if they're there.
 vim.o.smartcase = true
 vim.o.termguicolors = true
@@ -558,8 +576,7 @@ vim.wo.signcolumn = 'yes'
 vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 
 -- Themes, I have many and change often depending on the time of day etc.
-vim.cmd [[colorscheme terafox]]
---vim.cmd [[colorscheme nightfly]]
+vim.cmd [[colorscheme xcodedark]]
 
 -- Autofmt on save
 vim.cmd [[au BufWritePre * lua vim.lsp.buf.formatting()]]
