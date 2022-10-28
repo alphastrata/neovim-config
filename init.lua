@@ -20,6 +20,20 @@ require('packer').startup(function(use)
 	use 'folke/tokyonight.nvim'
 	use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
 	use 'sh4hids/color-wheel.vim' -- Plugin to allow you to clone vscode themes into something neovim can handle
+	-- NOICE:
+	use 'rcarriga/nvim-notify'
+	use({
+		"folke/noice.nvim",
+		event = "VimEnter",
+		config = function()
+			require("noice").setup()
+		end,
+		requires = {
+			"MunifTanjim/nui.nvim",
+			"rcarriga/nvim-notify",
+		}
+	})
+	--
 	use 'xiyaowong/nvim-transparent' -- I have a virtual background, that refreshes every 10 minutes and like to well, see that.
 
 	-- tools:
@@ -37,7 +51,6 @@ require('packer').startup(function(use)
 	use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } } -- Snippet Engine and Snippet Expansion
 	use { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' } -- Enables these TODO: comments to get that sweet, sweet highlighting.
 	use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } } -- Autocompletion
-
 	use 'ggandor/leap.nvim'
 	use { 'nvim-telescope/telescope-fzf-native.nvim',
 		run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
@@ -73,8 +86,48 @@ require('packer').startup(function(use)
 	end
 end)
 
+-- INFO: only if you've nuked the site/packer/pack dir lately...
+-- You'll need to restart nvim, and then it will work.
+if is_bootstrap then
+	print '=================================='
+	print '    Plugins are being installed'
+	print '    Wait until Packer completes,'
+	print '       then restart nvim'
+	print '=================================='
+	return
+end
+
 -- INFO: impatient allegedly improves startup time of lua-modules...
 require('impatient')
+
+-- NOICE:
+require("noice").setup({
+	views = {
+		cmdline_popup = {
+			border = {
+				style = "none",
+				padding = { 2, 3 },
+			},
+			filter_options = {},
+			{
+				win_options = {
+					winhighlight = {
+						Normal = "NormalFloat",
+						FloatBorder = "FloatBorder"
+					},
+				}
+			}
+		},
+	},
+	popup = {
+		size = { width = 80, height = 40, focusable = true }
+	}
+})
+
+require("notify").setup({
+	background_colour = "#000000",
+})
+--
 
 require('leap').add_default_mappings()
 
@@ -90,17 +143,6 @@ require("transparent").setup({
 	},
 	exclude = {},
 })
-
--- INFO: only if you've nuked the site/packer/pack dir lately...
--- You'll need to restart nvim, and then it will work.
-if is_bootstrap then
-	print '=================================='
-	print '    Plugins are being installed'
-	print '    Wait until Packer completes,'
-	print '       then restart nvim'
-	print '=================================='
-	return
-end
 
 local tabnine = require('cmp_tabnine.config')
 tabnine:setup({
@@ -150,13 +192,27 @@ require('lualine').setup { --NOTE: basically the defaults.
 		globalstatus = true,
 	},
 	sections = {
-		lualine_a = { 'mode' },
-		lualine_b = { { 'FugitiveHead', icon = '' } },
-		--lualine_b = { 'branch', 'diff', 'diagnostics' },
-		lualine_c = { 'filename' },
-		lualine_x = { 'encoding', 'filetype' },
-		lualine_y = { 'progress' },
-		lualine_z = { 'location' }
+		lualine_x = {
+			{
+				require("noice").api.status.message.get_hl,
+				cond = require("noice").api.status.message.has,
+			},
+			{
+				require("noice").api.status.command.get,
+				cond = require("noice").api.status.command.has,
+				color = { fg = "#ff9e64" },
+			},
+			{
+				require("noice").api.status.mode.get,
+				cond = require("noice").api.status.mode.has,
+				color = { fg = "#ff9e64" },
+			},
+			{
+				require("noice").api.status.search.get,
+				cond = require("noice").api.status.search.has,
+				color = { fg = "#ff9e64" },
+			},
+		},
 	},
 	inactive_sections = {
 		lualine_a = {},
@@ -304,7 +360,6 @@ require('Comment').setup(
 
 -- Enable telescope fzf(I'm using the C implementation), if installed
 require('telescope').load_extension('fzf')
-
 -- LSP settings (and most of my LSP related mappings)
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -478,7 +533,7 @@ keymap('n', '<leader>pc', ':PackerCompile<CR>', opts)
 
 -- buffers
 keymap('n', '<leader>Q', ':qall!<CR>', opts)
-keymap('n', '<leader>w', ':w!<CR>', opts)
+keymap('n', '<leader>w', ':w<CR>', opts)
 keymap('n', '<leader>q', ':bd!<CR>', opts)
 keymap('n', '<leader><TAB>', ":bnext<CR>", opts)
 keymap('n', '<leader><S-TAB>', ":bprevious<CR>", opts)
@@ -573,13 +628,14 @@ vim.wo.number = true -- numbers on lhs
 vim.wo.relativenumber = true -- numbers relative
 vim.wo.signcolumn = 'yes'
 
+
 vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 
 -- Themes, I have many and change often depending on the time of day etc.
 vim.cmd [[colorscheme xcodedark]]
 
 -- Autofmt on save
-vim.cmd [[au BufWritePre * lua vim.lsp.buf.formatting()]]
+vim.cmd [[au BufWritePre * lua vim.lsp.buf.format()]]
 
 -- NEOTREE
 vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
