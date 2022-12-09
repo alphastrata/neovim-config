@@ -10,6 +10,8 @@ completion-trigger-len = 3
 auto-info = true
 true-color = true
 
+#language-server = { command = "rustup", args = ["run", "nightly", "rust-analyzer"]}
+
 [editor.cursor-shape]
 insert = "bar"
 normal = "bar"

@@ -39,13 +39,14 @@ require('packer').startup(function(use)
 	-- tools:
 	use 'lewis6991/spellsitter.nvim' -- spell better
 	use 'neovim/nvim-lspconfig'
+	use 'MTDL9/vim-log-highlighting'
 	use 'simrat39/rust-tools.nvim'
 	use 'numToStr/Comment.nvim' -- "cl" to comment/uncomment visual regions/lines
 	use 'nvim-lua/plenary.nvim' -- all the lua functions you don't wanna write twice
 	use 'nvim-lualine/lualine.nvim' -- statusline
 	use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code
-	--use 'nvim-treesitter/nvim-treesitter-context' -- Get the name of the block you're in redardless of how offscreen that line may be...
-	use 'nvim-treesitter/nvim-treesitter-textobjects' --  Additional textobjects for treesitter
+	use 'nvim-treesitter/nvim-treesitter-context' -- Get the name of the block you're in redardless of how offscreen that line may be...
+	--use 'nvim-treesitter/nvim-treesitter-textobjects' --  Additional textobjects for treesitter
 	use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
 	use 'williamboman/nvim-lsp-installer' -- Automatically install language servers to stdpath
 	use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } } -- Snippet Engine and Snippet Expansion
@@ -61,6 +62,7 @@ require('packer').startup(function(use)
 	use { 'tzachar/cmp-tabnine', run = './install.sh', requires = 'hrsh7th/nvim-cmp' } -- Tabnine is like github autopilot (useful for working in unfamiliar languages)
 	use { "windwp/nvim-autopairs", config = function() require("nvim-autopairs").setup {} end -- I don't like the autobracketing in neovim's default
 	}
+	use { "williamboman/mason.nvim" } -- automatically manage my lsp servers for me pls!
 	-- NEOTREE
 	use {
 		"nvim-neo-tree/neo-tree.nvim",
@@ -382,6 +384,8 @@ local on_attach = function(_, bufnr)
 	nmap('ref', require('telescope.builtin').lsp_references)
 	nmap('sig', vim.lsp.buf.signature_help, 'Signature Documentation')
 	nmap('type', vim.lsp.buf.type_definition, 'Type Definition')
+	nmap("ga", vim.lsp.buf.code_action, 'code actions')
+
 end
 
 -- [[ Configure Treesitter ]]
@@ -421,12 +425,13 @@ require('nvim-treesitter.configs').setup {
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- Enable the following language servers
-local servers = { 'rust_analyzer', 'sumneko_lua', 'gopls', 'jsonls', 'grammarly' }
-
+local servers = { 'rust_analyzer', 'marksman', 'sumneko_lua', 'gopls', 'jsonls', 'grammarly' }
 -- Ensure the servers above are installed
 require('nvim-lsp-installer').setup {
 	ensure_installed = servers,
 }
+
+require("mason").setup()
 
 -- Attach em to buffers...
 for _, lsp in ipairs(servers) do
@@ -521,7 +526,6 @@ local opts = { noremap = true, silent = true }
 
 -- helper func to reduce typing
 local keymap = vim.api.nvim_set_keymap
-
 --Remap space as leader key
 keymap("", "<Space>", "<Nop>", opts) --NOTE: lifted from Chris'
 vim.g.mapleader = " "
@@ -601,7 +605,7 @@ keymap("v", ">", ">gv", opts)
 -- Useful telescopes...
 keymap("n", "<leader>ct", ":Telescope colorscheme<CR>", opts)
 keymap("n", "<leader>sp", ":Telescope spell_suggest<CR>", opts)
-keymap("n", "<leader>f", ":Telescope find_files hidden=true<CR>", opts)
+keymap("n", "<leader>f", ":Telescope find_files hidden=true no_ignore=true<CR>", opts)
 keymap("n", "<leader>fd", ":Telescope fd<CR>", opts)
 keymap("n", "<leader>fa", ":Telescope live_grep<CR>", opts)
 keymap("n", "<leader>T", ":Telescope<CR>", opts)
@@ -632,7 +636,7 @@ vim.wo.signcolumn = 'yes'
 vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 
 -- Themes, I have many and change often depending on the time of day etc.
-vim.cmd [[colorscheme xcodedark]]
+vim.cmd [[colorscheme terafox]]
 
 -- Autofmt on save
 vim.cmd [[au BufWritePre * lua vim.lsp.buf.format()]]

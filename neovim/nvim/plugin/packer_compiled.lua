@@ -193,10 +193,10 @@ _G.packer_plugins = {
     path = "/home/jer/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
   },
-  ["nvim-treesitter-textobjects"] = {
+  ["nvim-treesitter-context"] = {
     loaded = true,
-    path = "/home/jer/.local/share/nvim/site/pack/packer/start/nvim-treesitter-textobjects",
-    url = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
+    path = "/home/jer/.local/share/nvim/site/pack/packer/start/nvim-treesitter-context",
+    url = "https://github.com/nvim-treesitter/nvim-treesitter-context"
   },
   ["nvim-web-devicons"] = {
     loaded = true,
@@ -257,6 +257,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/jer/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
+  },
+  ["vim-log-highlighting"] = {
+    loaded = true,
+    path = "/home/jer/.local/share/nvim/site/pack/packer/start/vim-log-highlighting",
+    url = "https://github.com/MTDL9/vim-log-highlighting"
   },
   ["vim-nightfly-guicolors"] = {
     loaded = true,
