@@ -1,1 +1,0 @@
-language-server = { command = "rustup", args = ["run", "nightly", "rust-analyzer"]}
