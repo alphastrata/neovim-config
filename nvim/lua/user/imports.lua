@@ -7,85 +7,88 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     vim.cmd [[packadd packer.nvim]]
 end
 
--- INFO: PLUGINS:
+-- Imports
 require('packer').startup(function(use)
     use 'wbthomason/packer.nvim' -- package management
     use 'lewis6991/impatient.nvim' -- Load faster... apparently
 
     -- aesthetics:
-    -- themes:
     use({
+        'mechatroner/rainbow_csv',
         'arzg/vim-colors-xcode',
         'EdenEast/nightfox.nvim',
         'fenetikm/falcon',
         'bluz71/vim-nightfly-guicolors',
         'folke/tokyonight.nvim',
-        { "catppuccin/nvim",
-            as = "catppuccin", },
+        'rcarriga/nvim-notify',
+        { 'catppuccin/nvim',
+            as = 'catppuccin', },
         {
             'bluz71/vim-moonfly-colors', as = 'moonfly'
         },
         'folke/lsp-colors.nvim',
-        'savq/melange-nvim'
-    })
-
-
-    use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
-    use 'xiyaowong/nvim-transparent' -- I have a virtual background, that refreshes every 10 minutes and like to well, see that.
-
-    -- NOICE:
-    use({
-        "folke/noice.nvim",
+        'savq/melange-nvim',
+        'lukas-reineke/indent-blankline.nvim', -- Add indentation guides even on blank lines
+        'xiyaowong/nvim-transparent', -- I have a virtual background, that refreshes every 10 minutes and like to well, see that.
+        'folke/noice.nvim',
         requires = {
-            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-            "MunifTanjim/nui.nvim",
-            -- OPTIONAL:
-            --   `nvim-notify` is only needed, if you want to use the notification view.
-            --   If not available, we use `mini` as the fallback
-            "rcarriga/nvim-notify",
+            'MunifTanjim/nui.nvim',
+            'rcarriga/nvim-notify',
         }
     })
 
     -- tools:
+    use 'ggandor/leap.nvim'
     use 'lewis6991/spellsitter.nvim' -- spell better
-    use 'mechatroner/rainbow_csv'
-    use 'neovim/nvim-lspconfig'
     use 'MTDL9/vim-log-highlighting'
-    use 'simrat39/rust-tools.nvim'
-    use 'numToStr/Comment.nvim' -- "cl" to comment/uncomment visual regions/lines
+    use 'numToStr/Comment.nvim' -- 'cl' to comment/uncomment visual regions/lines
     use 'nvim-lua/plenary.nvim' -- all the lua functions you don't wanna write twice
     use 'nvim-lualine/lualine.nvim' -- statusline
-    use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code
     use 'nvim-treesitter/nvim-treesitter-context' -- Get the name of the block you're in redardless of how offscreen that line may be...
+    use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code
+    use 'simrat39/rust-tools.nvim'
     use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
-    use 'williamboman/nvim-lsp-installer' -- Automatically install language servers to stdpath
-    use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' } } -- Snippet Engine and Snippet Expansion
     use { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' } -- Enables these TODO: comments to get that sweet, sweet highlighting.
-    use { 'hrsh7th/nvim-cmp', requires = { 'hrsh7th/cmp-nvim-lsp' } } -- Autocompletion
-    use 'ggandor/leap.nvim'
-    use { 'nvim-telescope/telescope-fzf-native.nvim',
-        run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Fuzzy Finder (files, lsp, etc)
-    use { "nvim-telescope/telescope-file-browser.nvim" }
-    use { "windwp/nvim-autopairs", config = function() require("nvim-autopairs").setup {} end -- I don't like the autobracketing in neovim's default
+    use { 'nvim-telescope/telescope-file-browser.nvim' }
+    --auto complete
+    use {
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-cmdline',
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-path',
+        'hrsh7th/cmp-vsnip',
+        'hrsh7th/nvim-cmp',
+        'hrsh7th/vim-vsnip',
+        'L3MON4D3/LuaSnip',
+        'saadparwaiz1/cmp_luasnip',
     }
-    use { "williamboman/mason.nvim" } -- automatically manage my lsp servers for me pls!
-
+    -- LSP
+    use {
+        'williamboman/nvim-lsp-installer', -- Automatically install language servers to stdpath
+        'neovim/nvim-lspconfig',
+        'williamboman/mason-lspconfig.nvim',
+        'williamboman/mason.nvim',
+    }
     -- NEOTREE
     use {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v2.x",
+        'nvim-neo-tree/neo-tree.nvim',
+        branch = 'v2.x',
         requires = {
-            "nvim-lua/plenary.nvim",
-            "kyazdani42/nvim-web-devicons",
-            "MunifTanjim/nui.nvim",
+            'nvim-lua/plenary.nvim',
+            'kyazdani42/nvim-web-devicons',
+            'MunifTanjim/nui.nvim',
         }
     }
-    use 'fatih/vim-go' -- vim tooling
+    -- GO
+    use {
+        'fatih/vim-go', -- vim tooling
+    }
 
     -- Like everyone alive, I tried it -- decided it ain't worth it.
     -- Copilot NOTE: https://github.com/github/copilot.vim
-    -- use("github/copilot.vim")
+    -- use('github/copilot.vim')
     -- use 'Exafunction/codeium.vim'
 
     -- INFO: GIT:
