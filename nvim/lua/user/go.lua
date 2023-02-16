@@ -80,3 +80,6 @@ nvim_lsp['gopls'].setup {
         usePlaceholders = true,
     }
 }
+
+-- Run gofmt on save
+vim.api.nvim_command('autocmd BufWritePre *.go :silent !gofmt -s % > /dev/null 2>&1')

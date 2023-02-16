@@ -64,6 +64,7 @@ require('packer').startup(function(use)
         'L3MON4D3/LuaSnip',
         'saadparwaiz1/cmp_luasnip',
     }
+    use { "windwp/nvim-autopairs", config = function() require("nvim-autopairs").setup {} end } -- I don't like the autobracketing in neovim's default
     -- LSP
     use {
         'williamboman/nvim-lsp-installer', -- Automatically install language servers to stdpath

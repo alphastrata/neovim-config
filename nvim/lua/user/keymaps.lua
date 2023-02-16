@@ -53,8 +53,8 @@ nmap("v", ">", ">gv", 'Indent right')
 -- Useful telescopes...
 nmap("<leader>ct", ":Telescope colorscheme<CR>", 'Telescope colorscheme')
 nmap("<leader>sp", ":Telescope spell_suggest<CR>", 'Telescope spell suggest')
-nmap("<leader>f", ":Telescope find_files hidden=true no_ignore=true<CR>", 'Telescope find files')
-nmap("<leader>fd", ":Telescope fd<CR>", 'Telescope fd')
+nmap("<leader>fh", ":Telescope find_files hidden=true no_ignore=true<CR>", 'Telescope find files')
+nmap("<leader>f", ":Telescope fd<CR>", 'Telescope fd')
 nmap("<leader>fa", ":Telescope live_grep<CR>", 'Telescope live grep')
 nmap("<leader>T", ":Telescope<CR>", 'Telescope')
 
@@ -74,3 +74,5 @@ nmap('ref', require('telescope.builtin').lsp_references)
 nmap('sig', vim.lsp.buf.signature_help, 'Signature Documentation')
 nmap('type', vim.lsp.buf.type_definition, 'Type Definition')
 nmap("ga", vim.lsp.buf.code_action, 'code actions')
+
+require('leap').add_default_mappings()

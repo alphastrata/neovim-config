@@ -1,27 +1,27 @@
 require 'user.imports'
-require 'user.general'
-
 require('impatient')
 
-require 'user.aesthetics'
-require 'user.auto_complete'
+require 'user.general'
 require 'user.colemak'
+require 'user.keymaps'
+
 require 'user.comments'
 require 'user.git'
 require 'user.indentation'
-require 'user.keymaps'
 require 'user.lsp'
-require 'user.lua'
-require 'user.lualine'
--- require 'user.noice'
+require 'user.auto_complete'
 require 'user.treesitter'
+
+require 'user.lualine'
+require 'user.aesthetics'
+-- require 'user.noice'
 
 require('leap').add_default_mappings()
 
 -- TODO: Not currently using this/these -- but someday
 local lfs = require("lfs")
 
-function has_file_extension(dir, extension)
+local function has_file_extension(dir, extension)
     for file in lfs.dir(dir) do
         if file ~= "." and file ~= ".." then
             local full_path = dir .. "/" .. file
@@ -43,12 +43,20 @@ local current_dir = vim.fn.getcwd()
 
 if has_file_extension(current_dir, ".rs") then
     require "user.rust"
-    -- TODO: rust only stuff here.
     vim.notify('Rust files detected.')
 end
 
 if has_file_extension(current_dir, ".go") then
     require "user.go"
-    -- TODO: Golang only stuff here
     vim.notify('Go files detected.')
+end
+
+if has_file_extension(current_dir, ".py") then
+    require "user.python"
+    vim.notify('Python files detected.')
+end
+
+if has_file_extension(current_dir, ".lua") then
+    require 'user.lua'
+    vim.notify('luafiles detected.')
 end

@@ -53,5 +53,8 @@
     ],
     "diagnostics.globals": [
         "lfs"
+    ],
+    "diagnostics.disable": [
+        "undefined-global"
     ]
 }
