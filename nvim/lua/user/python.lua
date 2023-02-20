@@ -12,16 +12,28 @@ lspconfig.pylsp.setup {
     settings = {
         pylsp = {
             plugins = {
-                pylint = {
+                ruff =
+                {
                     enabled = true,
-                    executable = 'pylint',
-                    args = { '--rcfile=pylintrc' },
+                    lineLength = 180,
                 },
-                autopep8 = {
-                    enabled = true,
-                    executable = 'autopep8',
-                    args = { '--ignore=E266' },
+                mcabe =
+                {
+                    enabled = false,
                 },
+                pycodestyle =
+                {
+                    enabled = false,
+                },
+                pyflakes =
+                {
+                    enabled = false,
+                },
+                pylint =
+                {
+                    enabled = false,
+                },
+
             },
         },
     },
@@ -31,4 +43,15 @@ lspconfig.pylsp.setup {
 lspconfig.ruff_lsp.setup {
     capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
 
+
 }
+-- pylint = {
+--     enabled = true,
+--     executable = 'ruff',
+-- },
+-- autopep8 = {
+--     enabled = false,
+-- },
+-- yapf = {
+--     enabled = false,
+-- }
