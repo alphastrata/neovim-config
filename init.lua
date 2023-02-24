@@ -14,7 +14,7 @@ require 'user.treesitter'
 
 require 'user.lualine'
 require 'user.aesthetics'
-require 'user.noice'
+-- require 'user.noice'
 
 require 'user.lua'
 require "user.python"

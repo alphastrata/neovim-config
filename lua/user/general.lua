@@ -26,7 +26,7 @@ vim.wo.signcolumn = 'yes'
 vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 
 -- Themes, I have many and change often depending on the time of day etc.
-vim.cmd [[colorscheme tokyonight-storm]]
+vim.cmd [[colorscheme terafox]]
 
 -- Autofmt on save
 vim.cmd [[au BufWritePre * lua vim.lsp.buf.format()]]

@@ -52,6 +52,8 @@ require('packer').startup(function(use)
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Fuzzy Finder (files, lsp, etc)
     use { 'nvim-telescope/telescope-file-browser.nvim' }
+    use { 'jose-elias-alvarez/null-ls.nvim' }
+
     --auto complete
     use {
         'hrsh7th/cmp-buffer',

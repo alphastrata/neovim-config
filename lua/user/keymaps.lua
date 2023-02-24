@@ -1,4 +1,3 @@
--- NOTE: KEYBINDINGS, these will not be for you viewer, unless you use a colemak layout.
 local opts = { noremap = true, silent = true }
 
 -- helper func to reduce typing
