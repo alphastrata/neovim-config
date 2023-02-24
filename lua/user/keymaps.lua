@@ -45,9 +45,9 @@ nmap("<C-e>", ":resize +2<CR>", 'Resize down')
 nmap("<C-h>", ":vertical resize -2<CR>", 'Resize left')
 nmap("<C-i>", ":vertical resize +2<CR>", 'Resize right')
 
--- Indentation made good
-nmap("v", "<", "<gv", 'Indent left')
-nmap("v", ">", ">gv", 'Indent right')
+-- Indentation made good (NOTE: this will kinda ruin visual mode..)
+nmap("<S-<>", "<gv", 'indent left')
+nmap("<S->>", ">gv", 'indent right')
 
 -- Useful telescopes...
 nmap("<leader>ct", ":Telescope colorscheme<CR>", 'Telescope colorscheme')
