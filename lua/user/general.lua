@@ -1,27 +1,27 @@
 vim.g.termguicolors = true
-local M = {}
 
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
+vim.opt.spell = true
+vim.opt.spelllang = { 'en_au' }
 vim.opt.list = true
 vim.o.breakindent = true
 vim.o.completeopt = 'menuone,noselect'
 vim.o.hlsearch = false
 vim.o.ignorecase = true
 vim.o.mouse = 'a'
-vim.o.scrolloff = 15 --min lines at bottom of screen from cursor
+vim.o.scrolloff = 15  --min lines at bottom of screen from cursor
 vim.o.showtabline = 0 -- never use tabs, fzf or telescope will take you to open tabs if they're there.
 vim.o.smartcase = true
 vim.o.termguicolors = true
 vim.o.undofile = true
 vim.o.updatetime = 250
-vim.wo.number = true -- numbers on lhs
+vim.wo.number = true         -- numbers on lhs
 vim.wo.relativenumber = true -- numbers relative
 vim.wo.signcolumn = 'yes'
-
 
 vim.cmd [[set clipboard+=unnamedplus]] -- yank/from to os clipboard
 

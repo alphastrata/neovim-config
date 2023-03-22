@@ -17,7 +17,7 @@ keymap("n", "N", "B", opts)
 keymap("n", "E", "}", opts)
 keymap("n", "I", "{", opts)
 
--- because lua doesn't respect my noremaps>< TODO: do better...
+-- because lua doesn't respect my noremaps>
 keymap("v", "h", "h", opts)
 keymap("v", "n", "j", opts)
 keymap("v", "e", "k", opts)
@@ -28,7 +28,7 @@ keymap("v", "l", "o", opts)
 keymap("v", "N", "B", opts)
 keymap("v", "E", "}", opts)
 keymap("v", "I", "{", opts)
--- because lua doesn't respect >< TODO: do better...
+-- because lua doesn't respect >
 keymap("x", "h", "h", opts)
 keymap("x", "n", "j", opts)
 keymap("x", "e", "k", opts)

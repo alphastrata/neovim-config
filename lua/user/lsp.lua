@@ -7,21 +7,15 @@ mason.setup()
 mason_lsp.setup {
     ensure_installed = {
         "bashls",
-        -- "clangd",
-        -- "dockerls",
-        -- "elixirls",
         "golangci_lint_ls",
         "gopls",
-        -- "hls",
         "jsonls",
-        "lemminx",
         "lua_ls",
         "marksman",
         "pylsp",
         "rust_analyzer",
         "sourcery",
         "taplo",
-        "wgsl_analyzer",
         "yamlls",
         "zls",
     }

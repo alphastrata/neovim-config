@@ -16,6 +16,16 @@ local nmap = function(keys, func, desc)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
 end
 
+function switch_keyboard_layout()
+    if package.loaded.colemak then
+        package.loaded.colemak = nil
+        print("QWERTY")
+    else
+        require('colemak')
+        print("COLEMAK")
+    end
+end
+
 -- PackerUpdate and Compile
 nmap('<leader>pu', ':PackerUpdate<CR>', 'PackerUpdate')
 nmap('<leader>pc', ':PackerCompile<CR>', 'PackerCompile')

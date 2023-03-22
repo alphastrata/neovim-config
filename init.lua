@@ -20,4 +20,3 @@ require 'user.lua'
 require "user.python"
 require "user.go"
 require "user.rust"
-require('leap').add_default_mappings()

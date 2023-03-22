@@ -1,6 +1,6 @@
 local lspconfig = require('lspconfig')
 
--- Pylsp options
+-- -- Pylsp options
 lspconfig.pylsp.setup {
     cmd = { 'pylsp' },
     on_attach = function(client)
@@ -33,7 +33,6 @@ lspconfig.pylsp.setup {
                 {
                     enabled = false,
                 },
-
             },
         },
     },

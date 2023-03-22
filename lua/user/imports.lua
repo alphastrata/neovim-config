@@ -9,7 +9,7 @@ end
 
 -- Imports
 require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim' -- package management
+    use 'wbthomason/packer.nvim'   -- package management
     use 'lewis6991/impatient.nvim' -- Load faster... apparently
 
     -- aesthetics:
@@ -21,41 +21,48 @@ require('packer').startup(function(use)
         'bluz71/vim-nightfly-guicolors',
         'folke/tokyonight.nvim',
         'rcarriga/nvim-notify',
-        { 'catppuccin/nvim',
-            as = 'catppuccin', },
+        {
+            'catppuccin/nvim',
+            as = 'catppuccin',
+        },
         {
             'bluz71/vim-moonfly-colors', as = 'moonfly'
         },
         'folke/lsp-colors.nvim',
         'savq/melange-nvim',
         'lukas-reineke/indent-blankline.nvim', -- Add indentation guides even on blank lines
-        'xiyaowong/nvim-transparent', -- I have a virtual background, that refreshes every 10 minutes and like to well, see that.
+        'xiyaowong/nvim-transparent',          -- I have a virtual background, that refreshes every 10 minutes and like to well, see that.
         'folke/noice.nvim',
         requires = {
             'MunifTanjim/nui.nvim',
             'rcarriga/nvim-notify',
-        }
+        },
+        "lunarvim/horizon.nvim"
     })
 
     -- tools:
     use 'ggandor/leap.nvim'
-    use 'lewis6991/spellsitter.nvim' -- spell better
+    use 'lewis6991/spellsitter.nvim'                                       -- spell better
     use 'MTDL9/vim-log-highlighting'
-    use 'numToStr/Comment.nvim' -- 'cl' to comment/uncomment visual regions/lines
-    use 'nvim-lua/plenary.nvim' -- all the lua functions you don't wanna write twice
-    use 'nvim-lualine/lualine.nvim' -- statusline
-    use 'nvim-treesitter/nvim-treesitter-context' -- Get the name of the block you're in redardless of how offscreen that line may be...
-    use 'nvim-treesitter/nvim-treesitter' -- Highlight, edit, and navigate code
+    use 'numToStr/Comment.nvim'                                            -- 'cl' to comment/uncomment visual regions/lines
+    use 'nvim-lua/plenary.nvim'                                            -- all the lua functions you don't wanna write twice
+    use 'nvim-lualine/lualine.nvim'                                        -- statusline
+    use 'nvim-treesitter/nvim-treesitter-context'                          -- Get the name of the block you're in redardless of how offscreen that line may be...
+    use 'nvim-treesitter/nvim-treesitter'                                  -- Highlight, edit, and navigate code
     use 'simrat39/rust-tools.nvim'
-    use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
+    use 'tpope/vim-sleuth'                                                 -- Detect tabstop and shiftwidth automatically
     use { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' } -- Enables these TODO: comments to get that sweet, sweet highlighting.
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+    use { 'nvim-telescope/telescope-fzf-native.nvim', run =
+    'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } } -- Fuzzy Finder (files, lsp, etc)
     use { 'nvim-telescope/telescope-file-browser.nvim' }
     use { 'jose-elias-alvarez/null-ls.nvim' }
+    use 'norcalli/nvim-colorizer.lua'
+    use { 'echasnovski/mini.surround' }
 
     --auto complete
     use {
+        'onsails/lspkind.nvim',
         'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-cmdline',
         'hrsh7th/cmp-nvim-lsp',
@@ -65,6 +72,7 @@ require('packer').startup(function(use)
         'hrsh7th/vim-vsnip',
         'L3MON4D3/LuaSnip',
         'saadparwaiz1/cmp_luasnip',
+        { 'tzachar/cmp-tabnine', run = './install.sh', requires = 'hrsh7th/nvim-cmp' }
     }
     use { "windwp/nvim-autopairs", config = function() require("nvim-autopairs").setup {} end } -- I don't like the autobracketing in neovim's default
     -- LSP
@@ -94,11 +102,37 @@ require('packer').startup(function(use)
     -- use('github/copilot.vim')
     -- use 'Exafunction/codeium.vim'
 
+    --GPTs:
+    -- use({
+    --     "jackMort/ChatGPT.nvim",
+    --     config = function()
+    --         require("chatgpt").setup({
+    --         })
+    --     end,
+    --     requires = {
+    --         "MunifTanjim/nui.nvim",
+    --         "nvim-lua/plenary.nvim",
+    --         "nvim-telescope/telescope.nvim"
+    --     }
+    -- })
+
+    -- CODEIUM:
+    -- use {
+    --     'Exafunction/codeium.vim',
+    --     config = function()
+    --         -- Change '<C-g>' here to any keycode you like.
+    --         vim.keymap.set('i', '<c-g>', function() return vim.fn['codeium#Accept']() end, { expr = true })
+    --         vim.keymap.set('i', '<c-;>', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true })
+    --         vim.keymap.set('i', '<c-,>', function() return vim.fn['codeium#CycleCompletions']( -1) end, { expr = true })
+    --         vim.keymap.set('i', '<c-x>', function() return vim.fn['codeium#Clear']() end, { expr = true })
+    --     end
+    -- }
+
     -- INFO: GIT:
     use({ 'tpope/vim-fugitive', -- Git commands in nvim
-        'tpope/vim-rhubarb', -- Fugitive-companion to interact with github
+        'tpope/vim-rhubarb',    -- Fugitive-companion to interact with github
         { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-    }) -- Add git related info in the signs columns and popups
+    })                          -- Add git related info in the signs columns and popups
 
     -- Install all our plugins and packer, which manages them. (if not already installed)
     if is_bootstrap then
